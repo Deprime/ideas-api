@@ -61,8 +61,8 @@ class IdeaSeeder extends Seeder
         $rownum = ($i * $batches_count + $j);
         $records[] = [
           'rownum'     => $rownum,
-          // 'title'      => "Idea number $rownum",
-          'title'      => $this->faker->sentence(),
+          'author_id'  => rand(1, 6),
+          'title'      => $this->faker->text($maxNbChars = 120), //sentence($nb = rand(1, 3)),
           'created_at' => now(),
         ];
       }
