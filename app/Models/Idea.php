@@ -53,7 +53,7 @@ class Idea extends Model
   public static function getPaginator($current_page = 1, $per_page = 50)
   {
     $total_count = Idea::query()->max('rownum');
-    $last_page   = floor($total_count / $per_page);
+    $last_page   = ceil($total_count / $per_page);
     $prev_page   = $current_page - 1;
     $next_page   = $current_page + 1;
 
