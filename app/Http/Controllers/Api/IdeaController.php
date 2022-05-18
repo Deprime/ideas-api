@@ -75,10 +75,13 @@ class IdeaController extends Controller
    */
   public function create(IdeaCreateRequest $request)
   {
-    $input = [];
     $max_rownum = Idea::query()->max('rownum');
-    $input["rownum"] = $max_rownum + 1;
-    $idea  = Idea::create($input);
+    $input      = $request->only(['title']);
+    $input["rownum"]     = $max_rownum + 1;
+    $input['author_id']  = rand(1, 6);
+    $input['created_at'] = now();
+
+    $idea = Idea::create($input);
     return response()->json($idea, Response::HTTP_CREATED);
   }
 
