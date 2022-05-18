@@ -18,7 +18,7 @@ This api app based on **Laravel** framework. This app provides list of 10KK idea
 ## Setup
 
 - In postgres create a database which will be used in by this app
-- make a copy of `.env.sample` evironment cofig file and rename it to `.env`
+- make a copy of `.env.sample` environment cofig file and rename it to `.env`
 - In `.env` change next variabales according to your Postgres settings for created DB:
   - `DB_DATABASE`
   - `DB_USERNAME`
@@ -91,9 +91,11 @@ I didn't have enough time to implement authorization (active vacation), so only 
 
 ## Delete record
 
-As you can see, I **cheated a little**. In the current implementation, I did not find a correct way to implement the deletion of records and maintain the consistency of data during pagination.
-
-Therefore, soft deletion is implemented in the app.
+> Тут я напишу от себя: я слукавил. В текущей реализации я не нашел универсального решения, которое бы поддерживало бу физическое удаление записей и обеспечивало бы консистентность данных во время постраничной навигации.
+> 
+> Я изучил материал по этому поводу (ну хотя бы этот базис https://habr.com/ru/post/301044/) и выбрал наименьшее из зол - Пагинация по набору ключей для упорядоченных запросов.
+> 
+> По этому удаление реализовано через soft delete - записи просто помечаются, как удаленные.
 
 **DELETE** `http://127.0.0.1:8000/api/v1/ideas/{id}`
 
