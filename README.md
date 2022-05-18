@@ -1,64 +1,104 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Test idea app - api
 
-## About Laravel
+This api app based on **Laravel** framework. This app provides list of 10KK ideas and REST api for it.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Requirements
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- PHP ^8.0.2
+- Composer
+- Postgres DB
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Installation
 
-## Learning Laravel
+- clone git repo
+- open terminal and navigate to repo directory
+- make `composer i`
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Setup
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- In postgres create a database which will be used in by this app
+- make a copy of `.env.sample` evironment cofig file and rename it to `.env`
+- In `.env` change next variabales according to your Postgres settings for created DB:
+  - `DB_DATABASE`
+  - `DB_USERNAME`
+  - `DB_PASSWORD`
+- If your Postgres instance has special port or host, you can provide this settings via next env variables:
+  - `DB_HOST`
+  - `DB_PORT`
 
-## Laravel Sponsors
+## DB Migration and seeding
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+After installation and setuo you can run migrations to create DB structure:
 
-### Premium Partners
+Open terminal, navigate to repo directory and run:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+```console
+php artisan migrate
+```
 
-## Contributing
+Since the app has 10KK records planned in the **idea** table, the process of filling in the table will take about 15 minutes (most of seeding time consumed by Faker).
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```console
+php artisan db:seed
+```
 
-## Code of Conduct
+## Running server
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```console
+php artisan serve
+```
 
-## Security Vulnerabilities
+In basic variant server will provide address `127.0.0.1:8000`
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Now you can access to your ideas api
 
-## License
+## List of records
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+**GET** `http://127.0.0.1:8000/api/v1/ideas`
+
+You can use navigationa by page by passing `page` param.
+
+**GET** `http://127.0.0.1:8000/api/v1/ideas?page=10`
+
+## Get single record
+
+**GET** `http://127.0.0.1:8000/api/v1/ideas/{id}`
+
+## Create record
+
+I didn't have enough time to implement authorization (active vacation), so only a **title** is needed to create a record. The app will generate other attributes of the record on its own.
+
+**POST** `http://127.0.0.1:8000/api/v1/ideas`
+
+```json
+// Payload
+{
+  "title": "Create a new title please"
+}
+```
+
+## Update record
+
+**POST** `http://127.0.0.1:8000/api/v1/ideas/{id}`
+
+```json
+// Payload
+{
+  "title": "I will update this title"
+}
+```
+
+## Delete record
+
+As you can see, I **cheated a little**. In the current implementation, I did not find a correct way to implement the deletion of records and maintain the consistency of data during pagination.
+
+Therefore, soft deletion is implemented in the app.
+
+**DELETE** `http://127.0.0.1:8000/api/v1/ideas/{id}`
+
+## Restore record
+
+Since soft deletion is implemented, I decided to provide the possibility of restoring records.
+
+**PATCH** `http://127.0.0.1:8000/api/v1/ideas/{id}`
