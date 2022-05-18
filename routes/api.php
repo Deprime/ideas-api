@@ -18,7 +18,6 @@ use App\Http\Controllers\Api\{
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
 Route::namespace('Api')->group(function() {
   Route::prefix('v1')->group(function () {
     Route::prefix('ideas')->group(function () {
@@ -27,8 +26,7 @@ Route::namespace('Api')->group(function() {
       Route::post('/',            [IdeaController::class, 'create']);
       Route::put('{idea_id}',     [IdeaController::class, 'update'])->whereNumber('idea_id');
       Route::delete('{idea_id}',  [IdeaController::class, 'delete'])->whereNumber('idea_id');
-
-      // TODO: trash, restore, erase
+      Route::patch('{idea_id}',   [IdeaController::class, 'restore'])->whereNumber('idea_id');
     });
   });
 });
